@@ -178,7 +178,6 @@
         //jQuery('.nav-tabs > li:not(.active)').hide();
         jQuery('#prev_step_button').hide();
         let nav_tabs_count = jQuery('.nav-tabs > li').length;
-        console.log(nav_tabs_count);
         
         function next_step(){
            jQuery('.nav-tabs > li.active').next().find('a').trigger('click');

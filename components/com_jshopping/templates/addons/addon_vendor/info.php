@@ -78,11 +78,11 @@
              jQuery('#category_id').on("change", function(){
                  let category_id = jQuery(this).val();
                  jQuery.ajax({
-                     type: "GET",
-                     url: "https://vib-trust.ru/index.php?option=com_jshopping&controller=addon_vendor&task=get_product_extra_fields",
-                     data: "",
-                     success: function(msg){
-                         console.log( "Прибыли данные: " + msg );
+                     type: "POST",
+                     url: "index.php?option=com_jshopping&controller=addon_vendor&task=get_product_extra_fields",
+                     data: "category_id="+category_id,
+                     success: function(html){
+                         jQuery('#extra_fields_space').html(html);
                      }
                  });
              });

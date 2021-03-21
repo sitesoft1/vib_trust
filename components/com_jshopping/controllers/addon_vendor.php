@@ -1214,7 +1214,66 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
     }
     
     function get_product_extra_fields(){
-        echo 'test get_product_extra_fields 123!!!';
+        $category_id = $_POST['category_id'];
+        $categorys = array($category_id);
+        $product = new stdClass();
+    
+        
+        $_productfields = $this->getModel("productFields");
+        $list = $_productfields->getList(1);
+    
+        $_productfieldvalues = $this->getModel("productFieldValues");
+        $listvalue = $_productfieldvalues->getAllList();
+        $f_option = array();
+        $f_option[] = JHTML::_('select.option', 0, " - - - ", 'id', 'name');
+    
+        $fields = array();
+        if (count($list) > 0)
+            foreach($list as $v){
+                $insert = 0;
+                if ($v->allcats==1){
+                    $insert = 1;
+                }else{
+                    $cats = unserialize($v->cats);
+                    if (count($categorys) > 0)
+                        foreach($categorys as $catid){
+                            if (in_array($catid, $cats)) $insert = 1;
+                        }
+                }
+            
+                if ($insert){
+                    $obj = new stdClass();
+                    $obj->id = $v->id;
+                    $obj->name = $v->name;
+                    $obj->groupname = $v->groupname;
+                    $tmp = array();
+                    if (count($listvalue) > 0)
+                        foreach($listvalue as $lv){
+                            if ($lv->field_id == $v->id) $tmp[] = $lv;
+                        }
+                    $name = 'extra_field_'.$v->id;
+                    if ($v->type==0){
+                        if ($v->multilist==1){
+                            $attr = 'multiple="multiple" size="10"';
+                        }else{
+                            $attr = "";
+                        }
+                        $obj->values = JHTML::_('select.genericlist', array_merge($f_option, $tmp), 'productfields['.$name.'][]', $attr, 'id', 'name', explode(',',''));
+                    }else{
+                        $obj->values = "<input type='text' name='".$name."' value='' />";
+                    }
+                    $fields[] = $obj;
+                }
+            }
+        $view_name = "addon_vendor";
+        $view_config = array("template_path"=>JPATH_COMPONENT."/templates/".$this->va_template."/".$view_name);
+        $view = $this->getView($view_name, 'html', '', $view_config);
+    
+        $view->setLayout("extrafields_inner");
+        $view->assign('fields', $fields);
+        $dispatcher = JDispatcher::getInstance();
+        $dispatcher->trigger('onVendorBeforeLoadTemplateHtmlProductExtraFields', array(&$view));
+        echo $view->loadTemplate();
         exit;
     }
     
