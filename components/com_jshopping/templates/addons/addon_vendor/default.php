@@ -51,10 +51,13 @@
         <?php } ?>
         <li><a href="#main-page" data-toggle="tab"><?php echo _JSHOP_VF_INFO_PRODUCT;?></a></li>
         <?php } ?>
+
+        <!-- Характеристики -->
+        <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
         
-        <?php if ($this->vndconfig->show_attributes && $this->product->parent_id==0){?>
+        <!--<?php if ($this->vndconfig->show_attributes && $this->product->parent_id==0){?>
             <li><a href="#attribs-page" data-toggle="tab"><?php echo _JSHOP_VF_ATTRIBUTES;?></a></li>
-        <?php }?>
+        <?php }?>-->
         <?php if ($this->vndconfig->show_freeattributes && $this->product->parent_id==0){?>
             <li><a href="#product_freeattribute" data-toggle="tab"><?php echo _JSHOP_VF_FREE_ATTRIBUTES;?></a></li>
         <?php }?>
@@ -70,6 +73,7 @@
         <?php if ($this->vndconfig->show_product_files){?>
             <li><a href="#product_files" data-toggle="tab"><?php echo _JSHOP_VF_FILES;?></a></li>
         <?php }?>
+        
         <?php if ($this->vndconfig->show_product_extra_field && $this->product->parent_id==0){?>
             <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
         <?php } ?>
@@ -109,6 +113,10 @@
        if ($this->vndconfig->show_product_files) {
            include(dirname(__FILE__)."/files.php");
        }
+       
+       //Характеристики
+       include(dirname(__FILE__)."/extrafields.php");
+       
        if ($this->vndconfig->show_product_extra_field && $this->product->parent_id==0){
            include(dirname(__FILE__)."/extrafields.php");
        }
@@ -167,7 +175,7 @@
 
     <script type = "text/javascript">
 
-        jQuery('.nav-tabs > li:not(.active)').hide();
+        //jQuery('.nav-tabs > li:not(.active)').hide();
         jQuery('#prev_step_button').hide();
         let nav_tabs_count = jQuery('.nav-tabs > li').length;
         console.log(nav_tabs_count);

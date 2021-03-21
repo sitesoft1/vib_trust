@@ -249,7 +249,8 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $lists['allcats'] = JHTML::_('select.radiolist', $all, 'allcats','onclick="PFShowHideSelectCats()"','id','value', 1);
         
         $categories = buildTreeCategory(0,1,0);
-        $lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="10" multiple = "multiple"','category_id','name', array());
+        //$lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="10" multiple = "multiple"','category_id','name', array());
+        $lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="1"','category_id','name', array());
 	    
         $view_name = "addon_vendor";
         $view_config = array("template_path"=>JPATH_COMPONENT."/templates/".$this->va_template."/".$view_name);
@@ -1175,7 +1176,8 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         if ($jshopConfig->tax){
             $lists['tax'] = JHTML::_('select.genericlist', $list_tax,'product_tax_id','class = "inputbox" size = "1" onchange = "updatePrice2('.$jshopConfig->display_price_admin.');"','tax_id','tax_name',$product->product_tax_id);
         }
-        $lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="10" multiple = "multiple" '.$category_select_onclick,'category_id','name',$categories_select);
+        //$lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="10" multiple = "multiple" '.$category_select_onclick,'category_id','name',$categories_select);
+        $lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="1" '.$category_select_onclick,'category_id','name',$categories_select);
         $lists['templates'] = getTemplates('product', $product->product_template);
         
         $dispatcher->trigger('onVendorBeforeDisplayEditProduct', array(&$product, &$related_products, &$lists, &$listfreeattributes, &$tax_value));
@@ -1200,7 +1202,27 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $view->display();    
     }
     
+    function ocLog($filename, $data, $append=false)
+    {
+        $MyJConfig = new JConfig();
+        if(!$append){
+            file_put_contents($MyJConfig->log_path . '/'. $filename . '.txt', var_export($data,true));
+        }else{
+            file_put_contents($MyJConfig->log_path . '/'. $filename . '.txt', var_export($data,true).PHP_EOL, FILE_APPEND);
+        }
+        
+    }
+    
+    function get_product_extra_fields(){
+        echo 'test get_product_extra_fields 123!!!';
+        exit;
+    }
+    
     function _getHtmlProductExtraFields($categorys, $product){
+    
+        $this->ocLog('categorys_log', $categorys, false);
+        $this->ocLog('product_log', $product, false);
+        
         $_productfields = $this->getModel("productFields");
         $list = $_productfields->getList(1);
         
@@ -1222,6 +1244,7 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
                     if (in_array($catid, $cats)) $insert = 1;
                 }
             }
+            
             if ($insert){
                 $obj = new stdClass();
                 $obj->id = $v->id;
@@ -1256,6 +1279,7 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $dispatcher->trigger('onVendorBeforeLoadTemplateHtmlProductExtraFields', array(&$view));
         return $view->loadTemplate();     
     }
+    
     
     function save_product() {
         $addon_vendor = $this->getModel("addon_vendor");
