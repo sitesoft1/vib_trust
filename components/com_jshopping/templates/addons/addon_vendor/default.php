@@ -65,7 +65,7 @@
             <li><a href="#product_videos" data-toggle="tab"><?php echo _JSHOP_VF_PRODUCT_VIDEOS;?></a></li>
         <?php }?>
         <?php if ($this->vndconfig->show_product_related && $this->product->parent_id==0){?>
-            <li><a href="#product_related" data-toggle="tab"><?php echo _JSHOP_VF_PRODUCT_RELATED;?></a></li>
+            <!--<li><a href="#product_related" data-toggle="tab"><?php echo _JSHOP_VF_PRODUCT_RELATED;?></a></li>-->
         <?php }?>
         <?php if ($this->vndconfig->show_product_files){?>
             <li><a href="#product_files" data-toggle="tab"><?php echo _JSHOP_VF_FILES;?></a></li>
@@ -81,7 +81,7 @@
             }
         ?>
         
-        <li><a href="#acab" data-toggle="tab">ACAB!!!</a></li>
+        <li><a href="#final_tab" data-toggle="tab">Последний шаг...</a></li>
         
     </ul>
     
@@ -118,8 +118,19 @@
            $dispatcher->trigger('onDisplayExtAttributProductEditTabsEnd', array(&$pane, &$row, &$lists, &$tax_value, &$currency));
        }
     ?>
-        <div id="acab" class="tab-pane">
-            ACAB 123!
+        <div id="final_tab" class="tab-pane">
+            <div class="toolbar-list">
+                <a class="toolbar" onclick="av_submitbutton('save');return false;" href="#">
+                    <span class="icon-32-save"> </span>
+                    <?php print _JSHOP_SAVE;?>
+                </a>
+                <?php if ($this->product->parent_id == 0) :?>
+                    <a class="toolbar" onclick="av_cancel();return false;" href="#">
+                        <span class="icon-32-cancel"> </span>
+                        <?php print _JSHOP_CANCEL;?>
+                    </a>
+                <?php endif;?>
+            </div>
         </div>
         
     </div>
@@ -129,8 +140,9 @@
        <input type = "hidden" name = "parent_id" value = "<?php echo $row->parent_id?>" />
         
         <!-- NEXT BUTTONS -->
-        <div class="next_buttons">
-            <strong><a onclick="next_step()" href="" data-toggle="tab">Далее >></a></strong>
+        <div class="step_buttons">
+            <div id="prev_step_button"><strong><a onclick="prev_step()" href="" data-toggle="tab"><< Назад</a></strong></div>
+             <div id="next_step_button"><strong><a onclick="next_step()" href="" data-toggle="tab">Далее >></a></strong></div>
         </div>
         <!-- NEXT BUTTON END -->
         
@@ -154,14 +166,30 @@
         </div>
 
     <script type = "text/javascript">
+
+        jQuery('.nav-tabs > li:not(.active)').hide();
+        jQuery('#prev_step_button').hide();
+        let nav_tabs_count = jQuery('.nav-tabs > li').length;
+        console.log(nav_tabs_count);
         
         function next_step(){
            jQuery('.nav-tabs > li.active').next().find('a').trigger('click');
-            //let test = jQuery('.nav-tabs > li.active').next().find('a').attr('href');
-            //jQuery('.nav-tabs > li.active > a').next().trigger('click');
-            //jQuery('.nav-tabs > li > a[href="#attribs-page"]').trigger('click');
-            //let attribs = jQuery('.nav-tabs > li > a[href="#attribs-page"]').text();
-            //console.log(attribs);
+           jQuery('.nav-tabs > li.active').show();
+           let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
+           jQuery('#prev_step_button').show();
+           if(active_tab=='#final_tab'){
+               jQuery('#next_step_button').hide();
+           }
+        }
+        
+        function prev_step() {
+            jQuery('#next_step_button').show();
+            jQuery('.nav-tabs > li.active').prev().find('a').trigger('click');
+            let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
+            if(active_tab == '#ru-page'){
+                jQuery('#prev_step_button').hide();
+                
+            }
         }
         
     var product_price_precision = <?php print intval($jshopConfig->product_price_precision)?>;
