@@ -1279,7 +1279,17 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
             $lists['tax'] = JHTML::_('select.genericlist', $list_tax,'product_tax_id','class = "inputbox" size = "1" onchange = "updatePrice2('.$jshopConfig->display_price_admin.');"','tax_id','tax_name',$product->product_tax_id);
         }
         //$lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="10" multiple = "multiple" '.$category_select_onclick,'category_id','name',$categories_select);
+        $start_category = new stdClass();
+        $start_category->category_id = '';
+        $start_category->name = '';
+        $start_category->disable = '';
+    
+        array_unshift($categories, $start_category);
+        
         $lists['categories'] = JHTML::_('select.genericlist', $categories,'category_id[]','class="inputbox" size="1" '.$category_select_onclick,'category_id','name',$categories_select);
+    
+        //$this->ocLog('categories_log', $categories, true);
+        
         $lists['templates'] = getTemplates('product', $product->product_template);
         
         $dispatcher->trigger('onVendorBeforeDisplayEditProduct', array(&$product, &$related_products, &$lists, &$listfreeattributes, &$tax_value));

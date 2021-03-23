@@ -191,13 +191,54 @@
         let nav_tabs_count = jQuery('.nav-tabs > li').length;
         
         function next_step(){
+            let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
+            let the_error = false;
+
+            if(active_tab=='#ru-page'){
+                let product_name = jQuery('#addon_vendor_edit_form .product_name').val();
+                if(product_name.length == 0){
+                    jQuery('#addon_vendor_edit_form .product_name').addClass('required_border');
+                    the_error = true;
+                }
+            }else if(active_tab=='#main-page'){
+                let product_price = jQuery('#product_price').val();
+                if(product_price.length == 0){
+                    jQuery('#product_price').addClass('required_border');
+                    the_error = true;
+                }
+
+                let region_id = jQuery('#region_id').val();
+                if(region_id.length == 0){
+                    jQuery('#region_id').addClass('required_border');
+                    the_error = true;
+                }
+
+                let city_id = jQuery('#city_id').val();
+                if(city_id.length == 0){
+                    jQuery('#city_id').addClass('required_border');
+                    the_error = true;
+                }
+
+                let category_id = jQuery('#category_id').val();
+                if(category_id.length == 0){
+                    jQuery('#category_id').addClass('required_border');
+                    the_error = true;
+                }
+            }
+            
+            if(the_error == false){
                 jQuery('.nav-tabs > li.active').next().find('a').trigger('click');
                 jQuery('.nav-tabs > li.active').show();
-                let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
+                let active_next_tab = jQuery('.nav-tabs > li.active > a').attr('href');
                 jQuery('#prev_step_button').show();
-                if(active_tab=='#final_tab'){
+                if(active_next_tab=='#final_tab'){
                     jQuery('#next_step_button').hide();
                 }
+            }else{
+                alert('Пожалуйства заполните обязательные поля!');
+            }
+            
+            
         }
         
         function prev_step() {
