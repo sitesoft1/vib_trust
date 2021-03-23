@@ -156,8 +156,8 @@
         
         <!-- NEXT BUTTONS -->
         <div class="step_buttons">
-            <div id="prev_step_button"><strong><a onclick="prev_step()" href="" data-toggle="tab"><< Назад</a></strong></div>
-             <div id="next_step_button"><strong><a onclick="next_step()" href="" data-toggle="tab">Далее >></a></strong></div>
+            <div id="prev_step_button"><strong><a class="button button-3" onclick="prev_step()" href="" data-toggle="tab"><< Назад</a></strong></div>
+             <div id="next_step_button"><strong><a class="button button-3" onclick="next_step()" href="" data-toggle="tab">Далее >></a></strong></div>
         </div>
         <!-- NEXT BUTTON END -->
         
