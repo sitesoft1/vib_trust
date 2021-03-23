@@ -1213,8 +1213,10 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         if (!$current_currency) $current_currency = $jshopConfig->mainCurrency;
         $_currency = $this->getModel('currencies'); 
         $currency_list = $_currency->getAllCurrencies();
+        
         $lists['currency'] = JHTML::_('select.genericlist', $currency_list, 'currency_id','class = "inputbox"','currency_id','currency_code', $current_currency);
-
+        $lists['currency_code'] = $currency_list[0]->currency_code;
+        
         //product extra field
         if ($jshopConfig->admin_show_product_extra_field) {
             $categorys_id = array();

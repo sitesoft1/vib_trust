@@ -17,12 +17,11 @@
          <?php echo _JSHOP_VF_PRODUCT_PRICE;?>
        </td>
        <td>
-         <input type = "text" name = "product_price" id = "product_price" value = "<?php echo $row->product_price?>" 
-         <?php if (!$this->withouttax) : ?>        
+         <input placeholder="<?php echo $this->lists['currency_code']; ?>" type="text" name="product_price" id="product_price" value = "<?php echo $row->product_price?>" <?php if (!$this->withouttax) : ?>
             onkeyup = "updatePrice2(<?php print $jshopConfig->display_price_admin;?>)"  
          <?php endif; ?>
          />       
-         <?php echo $this->lists['currency']; ?>
+         <?php //echo $this->lists['currency']; ?>
        </td>
      </tr>
      
@@ -47,15 +46,15 @@
        </td>
      </tr>
      <?php endif; ?>
-    
-     <tr>
+
+         <!-- <tr>
        <td class="key">
          <?php echo _JSHOP_EAN_PRODUCT;?>
        </td>
        <td>
          <input type = "text" name = "product_ean" id = "product_ean" value = "<?php echo $row->product_ean?>" onkeyup="updateEanForAttrib()"; />
        </td>
-     </tr>
+     </tr>-->
 
      <!--<tr>
        <td class="key"><?php echo _JSHOP_VF_URL; ?></td>
@@ -84,7 +83,7 @@
      
      <tr>
        <td class="key">
-         <?php echo _JSHOP_VF_CATEGORIES;?>
+         <?php //echo _JSHOP_VF_CATEGORIES;?>Выберите категорию: *
        </td>
        <td>
          <?php echo $lists['categories'];?>
