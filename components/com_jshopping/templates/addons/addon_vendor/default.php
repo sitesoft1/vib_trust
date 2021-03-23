@@ -26,7 +26,8 @@
             }
             ?>
         </div>
-        <div class="toolbar-list">        
+        
+        <!--<div class="toolbar-list">
             <a class="toolbar" onclick="av_submitbutton('save');return false;" href="#">
                 <span class="icon-32-save"> </span>
                 <?php print _JSHOP_SAVE;?>
@@ -37,7 +38,8 @@
                 <?php print _JSHOP_CANCEL;?>
             </a>
             <?php endif;?>
-        </div>
+        </div>-->
+        
     </div>
     
     <ul class="nav nav-tabs">
@@ -134,18 +136,7 @@
        }
     ?>
         <div id="final_tab" class="tab-pane">
-            <div class="toolbar-list">
-                <a class="toolbar" onclick="av_submitbutton('save');return false;" href="#">
-                    <span class="icon-32-save"> </span>
-                    <?php print _JSHOP_SAVE;?>
-                </a>
-                <?php if ($this->product->parent_id == 0) :?>
-                    <a class="toolbar" onclick="av_cancel();return false;" href="#">
-                        <span class="icon-32-cancel"> </span>
-                        <?php print _JSHOP_CANCEL;?>
-                    </a>
-                <?php endif;?>
-            </div>
+        
         </div>
         
     </div>
@@ -155,9 +146,17 @@
        <input type = "hidden" name = "parent_id" value = "<?php echo $row->parent_id?>" />
         
         <!-- NEXT BUTTONS -->
+        <?php
+            if(isset($_GET['product_id']) and !empty($_GET['product_id'])){
+                $save = 'Сохранить предложение >>';
+            } else{
+                $save = 'Опубликовать предложение >>';
+            }
+        ?>
         <div class="step_buttons">
             <div id="prev_step_button"><strong><a class="button button-3" onclick="prev_step()" href="" data-toggle="tab"><< Назад</a></strong></div>
              <div id="next_step_button"><strong><a class="button button-3" onclick="next_step()" href="" data-toggle="tab">Далее >></a></strong></div>
+             <div id="final_button"><strong><a class="button button-3" onclick="av_submitbutton('save');return false;" href="" data-toggle="tab"><?php echo $save; ?></a></strong></div>
         </div>
         <!-- NEXT BUTTON END -->
         
@@ -167,7 +166,7 @@
     </div>
 
 
-        <div class="toolbar-list">        
+       <!-- <div class="toolbar-list">
             <a class="toolbar" onclick="av_submitbutton('save');return false;" href="#">
                 <span class="icon-32-save"> </span>
                 <?php print _JSHOP_SAVE;?>
@@ -178,7 +177,7 @@
                 <?php print _JSHOP_CANCEL;?>
             </a>
             <?php endif;?>
-        </div>
+        </div> -->
 
     <script type = "text/javascript">
         
@@ -186,7 +185,12 @@
             jQuery(this).removeClass('required_border');
         });
         
-        //jQuery('.nav-tabs > li:not(.active)').hide();
+        <?php if(isset($_GET['product_id']) and !empty($_GET['product_id'])){ ?>
+            //nothing
+        <?php }else{ ?>
+            jQuery('.nav-tabs > li:not(.active)').hide();
+        <?php } ?>
+        
         jQuery('#prev_step_button').hide();
         let nav_tabs_count = jQuery('.nav-tabs > li').length;
         
@@ -233,13 +237,17 @@
                 jQuery('#prev_step_button').show();
                 if(active_next_tab=='#final_tab'){
                     jQuery('#next_step_button').hide();
+                    jQuery('#final_button').show();
                 }
             }else{
-                alert('Пожалуйства заполните обязательные поля!');
+                alert('Пожалуйста заполните обязательные поля!');
             }
-            
-            
         }
+
+        jQuery('a[href="#final_tab"]').on("click", function(){
+            jQuery('#next_step_button').hide();
+            jQuery('#final_button').show();
+        });
         
         function prev_step() {
             jQuery('#next_step_button').show();
