@@ -2,7 +2,7 @@
     <div class="col100">
      <table class="jshop" width="90%">
      
-     <tr>
+     <tr hidden>
        <td class="key" style="width:180px;">
          <?php echo _JSHOP_VF_PUBLISH;?>
        </td>
@@ -63,6 +63,24 @@
          <input type = "text" name = "product_url" id = "product_url" value = "<?php echo $row->product_url?>" size="80" />
        </td>
      </tr>-->
+
+     <tr>
+         <td class="key">
+             Выберите регион: *
+         </td>
+         <td>
+             <?php echo $lists['regions'];?>
+         </td>
+     </tr>
+
+     <tr>
+         <td class="key">
+                 Выберите город: *
+         </td>
+         <td>
+             <?php echo $lists['cities'];?>
+         </td>
+     </tr>
      
      <tr>
        <td class="key">

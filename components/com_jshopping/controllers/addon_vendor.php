@@ -1010,6 +1010,43 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $lists['images'] = $images;
         $lists['videos'] = $videos;
         $lists['files'] = $files;
+        
+        //Regions
+        $db = JFactory::getDBO();
+        $db->setQuery("SELECT `country_id` AS `country_id`, `name_ru-RU` AS `country_name` FROM `#__jshopping_countries`");
+        $row = $db->loadObjectList();
+        //$this->ocLog('row_log', $row, true);
+    
+        if(!empty($row)){
+            $lists['regions'] = '<select id="region_id" name="region_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+            foreach ($row as $region){
+                //$this->ocLog('region_log', $region->country_id, true);
+                if($region->country_name == 'Самарская Область'){
+                    $lists['regions'] .= '<option value="'.$region->country_id.'" selected="selected" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+            
+                    $country_id = $region->country_id;
+                    $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$country_id'");
+                    $row_city = $db->loadObjectList();
+                    //$this->ocLog('row_city_log', $row_city, true);
+                }else{
+                    $lists['regions'] .= '<option value="'.$region->country_id.'" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                }
+            }
+            $lists['regions'] .= '</select>'.PHP_EOL;
+    
+            $lists['cities'] = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+            if(!empty($row_city)){
+                foreach ($row_city as $city){
+                    if($city->city_name == 'Самара'){
+                        $lists['cities'] .= '<option value="'.$city->city_id.'" selected="selected" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                    }else{
+                        $lists['cities'] .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                    }
+                }
+            }
+            $lists['cities'] .= '</select>'.PHP_EOL;
+        }
+        //Regions END
 
         $manuf1 = array();
         $manuf1[0] = new stdClass();
@@ -1279,8 +1316,8 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
     
     function _getHtmlProductExtraFields($categorys, $product){
     
-        $this->ocLog('categorys_log', $categorys, false);
-        $this->ocLog('product_log', $product, false);
+        //$this->ocLog('categorys_log', $categorys, false);
+        //$this->ocLog('product_log', $product, false);
         
         $_productfields = $this->getModel("productFields");
         $list = $_productfields->getList(1);

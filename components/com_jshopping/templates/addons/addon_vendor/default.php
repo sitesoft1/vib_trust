@@ -53,7 +53,13 @@
         <?php } ?>
 
         <!-- Характеристики -->
-        <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
+        <?php if (true && $this->product->parent_id==0){?>
+            <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
+        <?php } ?>
+        
+        <?php /* if ($this->vndconfig->show_product_extra_field && $this->product->parent_id==0){?>
+            <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
+        <?php } */ ?>
         
         <!--<?php if ($this->vndconfig->show_attributes && $this->product->parent_id==0){?>
             <li><a href="#attribs-page" data-toggle="tab"><?php echo _JSHOP_VF_ATTRIBUTES;?></a></li>
@@ -74,9 +80,6 @@
             <li><a href="#product_files" data-toggle="tab"><?php echo _JSHOP_VF_FILES;?></a></li>
         <?php }?>
         
-        <?php if ($this->vndconfig->show_product_extra_field && $this->product->parent_id==0){?>
-            <li><a href="#product_extra_fields" data-toggle="tab"><?php echo _JSHOP_VF_EXTRA_FIELDS;?></a></li>
-        <?php } ?>
         <?php 
             if ($this->product->parent_id == 0){
                 $dispatcher->trigger('onDisplayProductEditTabsEndTab', array(&$row, &$lists, &$tax_value));
@@ -85,7 +88,7 @@
             }
         ?>
         
-        <li><a href="#final_tab" data-toggle="tab">Последний шаг...</a></li>
+        <li><a href="#final_tab" data-toggle="tab">Публикация</a></li>
         
     </ul>
     
@@ -115,11 +118,15 @@
        }
        
        //Характеристики
-       include(dirname(__FILE__)."/extrafields.php");
+    if (true && $this->product->parent_id==0){
+        include(dirname(__FILE__)."/extrafields.php");
+    }
        
+       /*
        if ($this->vndconfig->show_product_extra_field && $this->product->parent_id==0){
            include(dirname(__FILE__)."/extrafields.php");
        }
+       */
        if ($this->product->parent_id == 0){
            $dispatcher->trigger('onDisplayProductEditTabsEnd', array(&$pane, &$row, &$lists, &$tax_value, &$currency));
        } else {
