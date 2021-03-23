@@ -14,7 +14,7 @@
     
      <tr>
        <td class="key">
-         <?php echo _JSHOP_VF_PRODUCT_PRICE;?>
+         <?php echo _JSHOP_VF_PRODUCT_PRICE;?>: *
        </td>
        <td>
          <input placeholder="<?php echo $this->lists['currency_code']; ?>" type="text" name="product_price" id="product_price" value = "<?php echo $row->product_price?>" <?php if (!$this->withouttax) : ?>
@@ -63,6 +63,15 @@
        </td>
      </tr>-->
 
+         <tr>
+             <td class="key">
+                 <?php //echo _JSHOP_VF_CATEGORIES;?>Выберите категорию: *
+             </td>
+             <td>
+                 <?php echo $lists['categories'];?>
+             </td>
+         </tr>
+
      <tr>
          <td class="key">
              Выберите регион: *
@@ -81,14 +90,7 @@
          </td>
      </tr>
      
-     <tr>
-       <td class="key">
-         <?php //echo _JSHOP_VF_CATEGORIES;?>Выберите категорию: *
-       </td>
-       <td>
-         <?php echo $lists['categories'];?>
-       </td>
-     </tr>
+
      
      <!-- Характеристики -->
          <script>

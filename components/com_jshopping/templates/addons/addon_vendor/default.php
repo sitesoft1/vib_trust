@@ -181,19 +181,23 @@
         </div>
 
     <script type = "text/javascript">
-
+        
+        jQuery('#addon_vendor_edit_form input, select').on("change", function(){
+            jQuery(this).removeClass('required_border');
+        });
+        
         //jQuery('.nav-tabs > li:not(.active)').hide();
         jQuery('#prev_step_button').hide();
         let nav_tabs_count = jQuery('.nav-tabs > li').length;
         
         function next_step(){
-           jQuery('.nav-tabs > li.active').next().find('a').trigger('click');
-           jQuery('.nav-tabs > li.active').show();
-           let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
-           jQuery('#prev_step_button').show();
-           if(active_tab=='#final_tab'){
-               jQuery('#next_step_button').hide();
-           }
+                jQuery('.nav-tabs > li.active').next().find('a').trigger('click');
+                jQuery('.nav-tabs > li.active').show();
+                let active_tab = jQuery('.nav-tabs > li.active > a').attr('href');
+                jQuery('#prev_step_button').show();
+                if(active_tab=='#final_tab'){
+                    jQuery('#next_step_button').hide();
+                }
         }
         
         function prev_step() {
@@ -206,26 +210,72 @@
             }
         }
         
+        function my_validate(){
+            
+            let my_error = false;
+            let product_name = jQuery('#addon_vendor_edit_form .product_name').val();
+            if(product_name.length == 0){
+                jQuery('#addon_vendor_edit_form .product_name').addClass('required_border');
+                my_error = true;
+            }
+            
+            let product_price = jQuery('#product_price').val();
+            if(product_price.length == 0){
+                jQuery('#product_price').addClass('required_border');
+                my_error = true;
+            }
+            
+            let region_id = jQuery('#region_id').val();
+            if(region_id.length == 0){
+                jQuery('#region_id').addClass('required_border');
+                my_error = true;
+            }
+
+            let city_id = jQuery('#city_id').val();
+            if(city_id.length == 0){
+                jQuery('#city_id').addClass('required_border');
+                my_error = true;
+            }
+
+            let category_id = jQuery('#category_id').val();
+            if(category_id.length == 0){
+                jQuery('#category_id').addClass('required_border');
+                my_error = true;
+            }
+            
+            if(my_error == true){
+                alert('Пожалуйства заполните обязательные поля!');
+                jQuery('.nav-tabs > li > a[href="#ru-page"]').trigger('click');
+            }
+            
+            return my_error;
+        }
+        
     var product_price_precision = <?php print intval($jshopConfig->product_price_precision)?>;
     function av_submitbutton(pressbutton){
-        if (pressbutton == 'save' || pressbutton == 'apply'){
-            <?php if ($this->vndconfig->show_product_image){?>
-            if (isEmpty($F_('product_width_image')) && isEmpty($F_('product_height_image'))){
-               alert ('<?php echo _JSHOP_VF_WRITE_SIZE_BAD?>');
-            } else 
-            <?php }?>
-            <?php if ($this->product->parent_id==0){?>    
+        
+        if(my_validate() == false){
+            if (pressbutton == 'save' || pressbutton == 'apply'){
+                <?php if ($this->vndconfig->show_product_image){?>
+                if (isEmpty($F_('product_width_image')) && isEmpty($F_('product_height_image'))){
+                    alert ('<?php echo _JSHOP_VF_WRITE_SIZE_BAD?>');
+                } else
+                <?php }?>
+                <?php if ($this->product->parent_id==0){?>
                 if (jQuery('#addon_vendor_edit_form #category_id').val() == null){
                     alert ('<?php echo _JSHOP_VF_WRITE_SELECT_CATEGORY?>');
-                } else { 
+                } else {
                     jQuery('#addon_vendor_edit_form').submit();
                 }
-            <?php } else {?>
+                <?php } else {?>
                 jQuery('#addon_vendor_edit_form').submit();
-            <?php }?>
-        } else {
-            jQuery('#addon_vendor_edit_form').submit();
+                <?php }?>
+            } else {
+                jQuery('#addon_vendor_edit_form').submit();
+            }
+            
         }
+        
     }
 
     function av_cancel(){
