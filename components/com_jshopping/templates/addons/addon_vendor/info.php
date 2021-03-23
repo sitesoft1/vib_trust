@@ -104,6 +104,18 @@
                      }
                  });
              });
+
+             jQuery('#region_id').on("change", function(){
+                 let region_id = jQuery(this).val();
+                 jQuery.ajax({
+                     type: "POST",
+                     url: "index.php?option=com_jshopping&controller=addon_vendor&task=get_cities",
+                     data: "region_id="+region_id,
+                     success: function(html){
+                         jQuery('#city_id').html(html);
+                     }
+                 });
+             });
          </script>
      <!-- Характеристики КОНЕЦ -->
      

@@ -1250,6 +1250,23 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         
     }
     
+    function get_cities(){
+        $region_id = $_POST['region_id'];
+        $db = JFactory::getDBO();
+        $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$region_id'");
+        $row_city = $db->loadObjectList();
+        //$cities = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+        $cities = '<option value="" selected="selected" data-original-title="" title="">&nbsp;</option>'.PHP_EOL;
+        if(!empty($row_city)){
+            foreach ($row_city as $city){
+                $cities .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+            }
+        }
+        //$cities .= '</select>'.PHP_EOL;
+        echo $cities;
+        exit;
+    }
+    
     function get_product_extra_fields(){
         $category_id = $_POST['category_id'];
         $categorys = array($category_id);
