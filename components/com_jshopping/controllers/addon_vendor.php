@@ -985,7 +985,75 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
             foreach($categories_select as $v){
                 $categories_select_list[] = $v->category_id;
             }
-            $related_products = $products->getRelatedProducts($product_id);   
+            $related_products = $products->getRelatedProducts($product_id);
+    
+            //Regions edit #########################################################################
+            $db = JFactory::getDBO();
+            $db->setQuery("SELECT `country_id` AS `country_id`, `name_ru-RU` AS `country_name` FROM `#__jshopping_countries`");
+            $row = $db->loadObjectList();
+            if(!empty($row)){
+                
+                $db->setQuery("SELECT `state_id`, `country_id` FROM `#__jshopping_products` WHERE `product_id`='$product_id'");
+                $row_product = $db->loadObjectList();
+                $country_id = $row_product[0]->country_id;
+                $state_id = $row_product[0]->state_id;
+                if(!empty($row_product) and !empty($country_id) and !empty($state_id)){
+                    
+                    $lists['regions'] = '<select id="region_id" name="region_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                    foreach ($row as $region){
+                        if($region->country_id == $country_id){
+                            $lists['regions'] .= '<option value="'.$region->country_id.'" selected="selected" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                            $country_id = $region->country_id;
+                            $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$country_id'");
+                            $row_city = $db->loadObjectList();
+                        }else{
+                            $lists['regions'] .= '<option value="'.$region->country_id.'" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                        }
+                    }
+                    $lists['regions'] .= '</select>'.PHP_EOL;
+    
+                    $lists['cities'] = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                    if(!empty($row_city)){
+                        foreach ($row_city as $city){
+                            if($city->city_id == $state_id){
+                                $lists['cities'] .= '<option value="'.$city->city_id.'" selected="selected" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                            }else{
+                                $lists['cities'] .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                            }
+                        }
+                    }
+                    $lists['cities'] .= '</select>'.PHP_EOL;
+                    
+                }
+                else{
+                        $lists['regions'] = '<select id="region_id" name="region_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                        foreach ($row as $region){
+                            if($region->country_name == 'Самарская Область'){
+                                $lists['regions'] .= '<option value="'.$region->country_id.'" selected="selected" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                                $country_id = $region->country_id;
+                                $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$country_id'");
+                                $row_city = $db->loadObjectList();
+                            }else{
+                                $lists['regions'] .= '<option value="'.$region->country_id.'" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                            }
+                        }
+                        $lists['regions'] .= '</select>'.PHP_EOL;
+                        
+                        $lists['cities'] = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                        if(!empty($row_city)){
+                            foreach ($row_city as $city){
+                                if($city->city_name == 'Самара'){
+                                    $lists['cities'] .= '<option value="'.$city->city_id.'" selected="selected" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                                }else{
+                                    $lists['cities'] .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                                }
+                            }
+                        }
+                        $lists['cities'] .= '</select>'.PHP_EOL;
+                    }
+                }
+            //Regions edit END #####################################################################
+            
         } else {
             $images = array();
             $videos = array();
@@ -993,6 +1061,38 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
             $categories_select_list = array();
             $categories_select = null;
             $related_products = array();
+    
+            //Regions #####################################################################
+            $db = JFactory::getDBO();
+            $db->setQuery("SELECT `country_id` AS `country_id`, `name_ru-RU` AS `country_name` FROM `#__jshopping_countries`");
+            $row = $db->loadObjectList();
+            if(!empty($row)){
+                $lists['regions'] = '<select id="region_id" name="region_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                foreach ($row as $region){
+                    if($region->country_name == 'Самарская Область'){
+                        $lists['regions'] .= '<option value="'.$region->country_id.'" selected="selected" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                        $country_id = $region->country_id;
+                        $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$country_id'");
+                        $row_city = $db->loadObjectList();
+                    }else{
+                        $lists['regions'] .= '<option value="'.$region->country_id.'" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
+                    }
+                }
+                $lists['regions'] .= '</select>'.PHP_EOL;
+                $lists['cities'] = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
+                if(!empty($row_city)){
+                    foreach ($row_city as $city){
+                        if($city->city_name == 'Самара'){
+                            $lists['cities'] .= '<option value="'.$city->city_id.'" selected="selected" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                        }else{
+                            $lists['cities'] .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
+                        }
+                    }
+                }
+                $lists['cities'] .= '</select>'.PHP_EOL;
+            }
+            //Regions END #####################################################################
+            
         }
         
         if ($jshopConfig->tax){
@@ -1011,43 +1111,6 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $lists['videos'] = $videos;
         $lists['files'] = $files;
         
-        //Regions
-        $db = JFactory::getDBO();
-        $db->setQuery("SELECT `country_id` AS `country_id`, `name_ru-RU` AS `country_name` FROM `#__jshopping_countries`");
-        $row = $db->loadObjectList();
-        //$this->ocLog('row_log', $row, true);
-    
-        if(!empty($row)){
-            $lists['regions'] = '<select id="region_id" name="region_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
-            foreach ($row as $region){
-                //$this->ocLog('region_log', $region->country_id, true);
-                if($region->country_name == 'Самарская Область'){
-                    $lists['regions'] .= '<option value="'.$region->country_id.'" selected="selected" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
-            
-                    $country_id = $region->country_id;
-                    $db->setQuery("SELECT `state_id` AS `city_id`, `name_ru-RU` AS `city_name` FROM `#__jshopping_states` WHERE `country_id`='$country_id'");
-                    $row_city = $db->loadObjectList();
-                    //$this->ocLog('row_city_log', $row_city, true);
-                }else{
-                    $lists['regions'] .= '<option value="'.$region->country_id.'" data-original-title="" title="">'.$region->country_name.'</option>'.PHP_EOL;
-                }
-            }
-            $lists['regions'] .= '</select>'.PHP_EOL;
-    
-            $lists['cities'] = '<select id="city_id" name="city_id" class="inputbox" size="1" data-original-title="" title="">'.PHP_EOL;
-            if(!empty($row_city)){
-                foreach ($row_city as $city){
-                    if($city->city_name == 'Самара'){
-                        $lists['cities'] .= '<option value="'.$city->city_id.'" selected="selected" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
-                    }else{
-                        $lists['cities'] .= '<option value="'.$city->city_id.'" data-original-title="" title="">'.$city->city_name.'</option>'.PHP_EOL;
-                    }
-                }
-            }
-            $lists['cities'] .= '</select>'.PHP_EOL;
-        }
-        //Regions END
-
         $manuf1 = array();
         $manuf1[0] = new stdClass();
         $manuf1[0]->manufacturer_id = '0';
@@ -1527,6 +1590,9 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
             $post['description_'.$lang->language] = JRequest::getVar('description'.$lang->id,'','post',"string", 2);
             $post['short_description_'.$lang->language] = JRequest::getVar('short_description_'.$lang->language,'','post',"string", 2);
         }
+    
+        //$this->ocLog('product_log', $product, true);
+        //$this->ocLog('post_log', $post, true);
         
         $dispatcher->trigger('onVendorBeforeDisplaySaveProduct', array(&$post, &$product) );
         
@@ -1557,6 +1623,15 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         $dispatcher->trigger('onVendorAfterSaveProduct', array(&$product));
 
         $product_id = $product->product_id;
+    
+        //Update region city
+        $my_db = JFactory::getDBO();
+        $region_id = $post['region_id'];
+        $city_id = $post['city_id'];
+        $my_db->setQuery("UPDATE `#__jshopping_products` SET `state_id`='$city_id', `country_id`='$region_id' WHERE `product_id`='$product_id'");
+        $my_db->query();
+        //$this->ocLog('product_id_log', $product_id, true);
+        //Update region city END
 
         if ($vndConfig->show_product_video && $product->parent_id==0){
             $_products->uploadVideo($product, $product_id, $post);
@@ -2009,6 +2084,7 @@ class JshoppingControllerAddon_vendor extends JControllerLegacy{
         }
 		die();    
     }
+    
   function edit_vendor() {
         $addon_vendor = $this->getModel("addon_vendor");
         $addon_vendor->checkUserSeller();
